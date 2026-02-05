@@ -1,22 +1,25 @@
 const express = require("express");
-const QRCode = require("qrcode");
-
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.get("/qr", async (req, res) => {
-  const data = "http://localhost:3000/attendance";
+app.use(express.json());
 
-  try {
-    const qrImage = await QRCode.toDataURL(data);
-    res.send(`
-      <h2>Scan this QR</h2>
-      <img src="${qrImage}" />
-    `);
-  } catch (err) {
-    res.send("Error generating QR");
-  }
+// HOME ROUTE (THIS FIXES THE ERROR)
+app.get("/", (req, res) => {
+  res.send("Attendance Server is Running ✅");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+// Example attendance route
+app.post("/mark", (req, res) => {
+  const { studentId } = req.body;
+
+  if (!studentId) {
+    return res.status(400).json({ message: "Student ID required" });
+  }
+
+  res.json({ message: `Attendance marked for ${studentId}` });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
