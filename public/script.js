@@ -1,15 +1,24 @@
 function markAttendance() {
-    const studentId = document.getElementById("studentId").value;
+  const studentId = document.getElementById("studentId").value;
+  const result = document.getElementById("result");
 
-    fetch("http://localhost:3000/attendance", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ studentId })
-    })
+  if (!studentId) {
+    result.innerText = "Please enter Student ID";
+    return;
+  }
+
+  fetch("/mark", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ studentId })
+  })
     .then(res => res.json())
     .then(data => {
-        document.getElementById("message").innerText = data.message;
+      result.innerText = data.message;
+    })
+    .catch(error => {
+      result.innerText = "Error marking attendance";
     });
 }
