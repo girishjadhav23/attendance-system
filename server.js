@@ -3,6 +3,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static("public"));
 
 // HOME ROUTE (THIS FIXES THE ERROR)
 app.get("/", (req, res) => {
