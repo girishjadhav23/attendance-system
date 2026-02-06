@@ -11,7 +11,18 @@
   <h2>Scan This QR</h2>
 
   <!-- QR IMAGE -->
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://attendance-system-sfd5.onrender.com/student.html" />
+ <h2>Scan This QR</h2>
+<div id="qrcode"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script>
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://attendance-system-sfd5.onrender.com/student.html",
+    width: 250,
+    height: 250
+  });
+</script>
+
 
   <h2>Attendance Records</h2>
   <ul id="records"></ul>
@@ -31,4 +42,5 @@
 
 </body>
 </html>
+
 
