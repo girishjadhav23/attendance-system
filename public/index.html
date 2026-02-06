@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Teacher Dashboard</title>
-  <link rel="stylesheet" href="style.css">
 
   <style>
     body {
-      text-align: center;
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    h2 {
+      margin-top: 25px;
     }
 
     #qrcode {
@@ -17,14 +28,42 @@
     }
 
     ul {
-      list-style-type: none;
+      list-style: none;
       padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+      font-size: 16px;
     }
   </style>
 </head>
+
 <body>
 
   <h1>Attendance System</h1>
 
   <h2>Scan This QR</h2>
-  <div id="qrcode"></div
+  <div id="qrcode"></div>
+
+  <h2>Attendance Records</h2>
+  <ul id="records">
+    <li>Demo mode – attendance shown on student device</li>
+  </ul>
+
+  <!-- QR CODE LIBRARY -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+  <!-- QR GENERATION -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      new QRCode(document.getElementById("qrcode"), {
+        text: "https://attendance-system-sfd5.onrender.com/student.html",
+        width: 220,
+        height: 220
+      });
+    });
+  </script>
+
+</body>
+</html>
