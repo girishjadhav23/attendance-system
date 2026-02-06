@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Digital Attendance</title>
-    <link rel="stylesheet" href="style.css">
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h2>Digital Attendance System</h2>
+  <h1>Attendance System</h1>
 
-    <input type="text" id="studentId" placeholder="Enter Student ID">
-    <button onclick="markAttendance()">Submit</button>
+  <h2>Scan This QR</h2>
 
-    <p id="message"></p>
+  <!-- QR IMAGE -->
+  <img src="https://attendance-system-sfd5.onrender.com/v1/create-qr-code/?size=250x250&data=https://YOUR-RENDER-URL/student.html" />
 
-    <script src="script.js"></script>
+  <h2>Attendance Records</h2>
+  <ul id="records"></ul>
+
+  <script>
+    fetch("/records")
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById("records");
+        data.forEach(item => {
+          const li = document.createElement("li");
+          li.innerText = `${item.studentId} - ${item.date} ${item.time}`;
+          list.appendChild(li);
+        });
+      });
+  </script>
+
 </body>
 </html>
-
