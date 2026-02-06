@@ -7,22 +7,24 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static("public"));
 
-/* =========================
+/* =======================
    MongoDB Connection
-========================= */
+======================= */
 mongoose.connect(
-  "mongodb+srv://girishjadhav1414_db_user:<db_password>@cluster0.n8siehe.mongodb.net/?appName=Cluster0",
+  process.env.MONGO_URL,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
   }
-)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+);
 
-/* =========================
-   Attendance Schema
-========================= */
+mongoose.connection.once("open", () => {
+  console.log("MongoDB connected");
+});
+
+/* =======================
+   Schema & Model
+======================= */
 const attendanceSchema = new mongoose.Schema({
   studentId: String,
   date: String,
@@ -31,40 +33,41 @@ const attendanceSchema = new mongoose.Schema({
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);
 
-/* =========================
-   MARK ATTENDANCE (STUDENT)
-========================= */
+/* =======================
+   Routes
+======================= */
 app.post("/mark", async (req, res) => {
-  const { studentId } = req.body;
+  try {
+    const { studentId } = req.body;
+    if (!studentId) {
+      return res.status(400).json({ message: "Student ID required" });
+    }
 
-  if (!studentId) {
-    return res.status(400).json({ message: "Student ID required" });
+    const now = new Date();
+
+    await Attendance.create({
+      studentId,
+      date: now.toLocaleDateString(),
+      time: now.toLocaleTimeString()
+    });
+
+    res.json({ message: "Attendance marked" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
-
-  const now = new Date();
-  const date = now.toLocaleDateString();
-  const time = now.toLocaleTimeString();
-
-  await Attendance.create({
-    studentId,
-    date,
-    time
-  });
-
-  res.json({ message: `Attendance marked for ${studentId}` });
 });
 
-/* =========================
-   FETCH RECORDS (TEACHER)
-========================= */
 app.get("/records", async (req, res) => {
-  const records = await Attendance.find().sort({ _id: -1 });
-  res.json(records);
+  try {
+    const records = await Attendance.find().sort({ _id: -1 });
+    res.json(records);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-/* =========================
-   SERVER START
-========================= */
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
