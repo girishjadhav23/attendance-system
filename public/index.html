@@ -9,50 +9,47 @@
   <h1>Attendance System</h1>
 
   <h2>Scan This QR</h2>
-
-  <!-- QR IMAGE -->
- <h2>Scan This QR</h2>
-<div id="qrcode"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-<script>
-  new QRCode(document.getElementById("qrcode"), {
-    text: "https://attendance-system-sfd5.onrender.com/student.html",
-    width: 250,
-    height: 250
-  });
-</script>
-
+  <div id="qrcode"></div>
 
   <h2>Attendance Records</h2>
   <ul id="records"></ul>
 
+  <!-- QR CODE SCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
-  function loadRecords() {
-    fetch("/records")
-      .then(res => res.json())
-      .then(data => {
-        const list = document.getElementById("records");
-        list.innerHTML = "";
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://attendance-system-sfd5.onrender.com/student.html",
+      width: 220,
+      height: 220
+    });
+  </script>
 
-        data.forEach(item => {
-          const li = document.createElement("li");
-          li.innerText = `${item.studentId} - ${item.date} ${item.time}`;
-          list.appendChild(li);
-        });
-      });
-  }
+  <!-- RECORDS AUTO REFRESH -->
+  <script>
+    function loadRecords() {
+      fetch("/records")
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById("records");
+          list.innerHTML = "";
 
-  // Load initially
-  loadRecords();
+          if (data.length === 0) {
+            list.innerHTML = "<li>No attendance yet</li>";
+            return;
+          }
 
-  // Auto-refresh every 3 seconds
-  setInterval(loadRecords, 3000);
-</script>
+          data.forEach(item => {
+            const li = document.createElement("li");
+            li.innerText = `${item.studentId} | ${item.date} | ${item.time}`;
+            list.appendChild(li);
+          });
+        })
+        .catch(err => console.error("Error loading records", err));
+    }
 
+    loadRecords();
+    setInterval(loadRecords, 3000);
+  </script>
 
 </body>
 </html>
-
-
-
