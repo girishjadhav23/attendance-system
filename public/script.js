@@ -2,11 +2,6 @@ function markAttendance() {
   const studentId = document.getElementById("studentId").value;
   const result = document.getElementById("result");
 
-  if (!studentId) {
-    result.innerText = "Please enter Student ID";
-    return;
-  }
-
   fetch("/mark", {
     method: "POST",
     headers: {
@@ -18,7 +13,7 @@ function markAttendance() {
     .then(data => {
       result.innerText = data.message;
     })
-    .catch(error => {
+    .catch(() => {
       result.innerText = "Error marking attendance";
     });
 }
