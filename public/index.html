@@ -28,19 +28,31 @@
   <ul id="records"></ul>
 
   <script>
+  function loadRecords() {
     fetch("/records")
       .then(res => res.json())
       .then(data => {
         const list = document.getElementById("records");
+        list.innerHTML = "";
+
         data.forEach(item => {
           const li = document.createElement("li");
           li.innerText = `${item.studentId} - ${item.date} ${item.time}`;
           list.appendChild(li);
         });
       });
-  </script>
+  }
+
+  // Load initially
+  loadRecords();
+
+  // Auto-refresh every 3 seconds
+  setInterval(loadRecords, 3000);
+</script>
+
 
 </body>
 </html>
+
 
 
